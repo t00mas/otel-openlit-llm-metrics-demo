@@ -1,0 +1,38 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+exporters:
+  debug:
+    verbosity: detailed
+  logging:
+    verbosity: detailed
+    sampling_initial: 1
+    sampling_thereafter: 1
+  prometheus:
+    endpoint: 0.0.0.0:8889
+
+service:
+  telemetry:
+    logs:
+      level: "debug"
+    metrics:
+      address: "0.0.0.0:8888"
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug, logging]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug, logging, prometheus] 

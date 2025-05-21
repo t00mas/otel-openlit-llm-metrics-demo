@@ -1,0 +1,3 @@
+google-generativeai>=0.3.2
+openlit==1.33.21
+grpcio>=1.59.0 
